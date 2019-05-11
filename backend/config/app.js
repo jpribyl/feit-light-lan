@@ -4,11 +4,17 @@
 const Env = use('Env');
 
 module.exports = {
+
   lights: [
     {
       id: '73280536cc50e3512e46',
       key: '1c321f0bbfedde17',
       ip: '192.168.1.191'
+    },
+    {
+      id: '38372430b4e62d59a66d',
+      key: '0865061ce640592d',
+      ip: '192.168.1.193'
     }
   ],
 
