@@ -2,10 +2,11 @@ import React, {Component} from 'react';
 import logo from './logo.svg';
 import './App.css';
 import axios from 'axios';
-import {HuePicker, AlphaPicker} from 'react-color';
+import {HuePicker, AlphaPicker, CirclePicker} from 'react-color';
 import Slider from 'rc-slider';
 import {AwesomeButton} from 'react-awesome-button';
 import {slide as Menu} from 'react-burger-menu';
+import Presets from './presets';
 
 const apiBase = 'http://192.168.1.156:3333';
 const createSliderWithTooltip = Slider.createSliderWithTooltip;
@@ -21,6 +22,7 @@ class App extends Component {
       saturation: 0.5,
       brightness: 0.15,
       index: 0,
+      presets: false,
       temp: 0.8
     };
   }
@@ -45,6 +47,19 @@ class App extends Component {
     });
   };
 
+  handlePresetChange = value => {
+    const newState = {
+      on: true,
+      hex: value.hex,
+      saturation: Presets[value.hex].saturation,
+      brightness: Presets[value.hex].brightness,
+      mode: Presets[value.hex].mode
+    };
+    this.setState({...newState}, () => {
+      axios.post(apiBase + '/light', {...this.state});
+    });
+  };
+
   handleTempChange = value => {
     this.setState({temp: value / 100}, () => {
       axios.post(apiBase + '/light', {...this.state});
@@ -63,6 +78,10 @@ class App extends Component {
     }
   };
 
+  togglePresets = () => {
+    this.setState({presets: !this.state.presets});
+  };
+
   toggleOn = (brightness, event) => {
     this.setState({on: !this.state.on}, () => {
       axios.post(apiBase + '/light', {...this.state});
@@ -76,6 +95,7 @@ class App extends Component {
 
         <div>
           <AwesomeButton
+            style={{width: '150px'}}
             className="menu-item"
             id="generateGraphicButton"
             type="primary"
@@ -89,6 +109,7 @@ class App extends Component {
 
         <div>
           <AwesomeButton
+            style={{width: '150px'}}
             className="menu-item"
             id="generateGraphicButton"
             type="primary"
@@ -106,6 +127,7 @@ class App extends Component {
 
         <div>
           <AwesomeButton
+            style={{width: '150px'}}
             className="menu-item"
             id="generateGraphicButton"
             type="primary"
@@ -114,47 +136,96 @@ class App extends Component {
             {this.state.mode === 'white' ? 'Set Color' : 'Set White'}
           </AwesomeButton>
         </div>
+
+        <div>
+          <AwesomeButton
+            style={{width: '150px'}}
+            className="menu-item"
+            id="generateGraphicButton"
+            type="primary"
+            action={this.togglePresets}
+            bubbles={true}>
+            {this.state.presets ? 'Show Custom' : 'Show Presets'}
+          </AwesomeButton>
+        </div>
       </Menu>
     );
     let bottomPart;
-    if (this.state.hex === '#ffffff') {
+    if (this.state.presets) {
+      bottomPart = (
+        <>
+          <h1 style={{marginTop: '-20px'}}>Presets</h1>
+          <div style={{marginLeft: '6%'}}>
+            <CirclePicker
+              circleSize={50}
+              circleSpacing={20}
+              width="100%"
+              colors={Object.keys(Presets)}
+              onChange={this.handlePresetChange}
+            />
+          </div>
+        </>
+      );
+    } else if (this.state.hex === '#ffffff') {
       bottomPart = (
         <>
           <h1>Temperature</h1>
           <SliderTooltip
-            style={{width: '50%', marginTop: '15px'}}
+            style={{width: '80%', marginTop: '15px'}}
             max={100}
             className="slider animationSpeedSlider"
             onAfterChange={this.handleTempChange}
             defaultValue={80}
+          />
+          <h1>Brightness</h1>
+          <SliderTooltip
+            style={{width: '80%', marginTop: '10px', marginBottom: '30px'}}
+            max={100}
+            className="slider animationSpeedSlider"
+            defaultValue={this.state.brightness * 100}
+            onAfterChange={this.handleBrightnessChange}
           />
         </>
       );
     } else {
       bottomPart = (
         <>
-          <div style={{marginTop: '-20px'}}>
-            <h1>Hue</h1>
-            <HuePicker
-              color={this.state.hex}
-              onChangeComplete={this.handleChangeComplete}
-              height="18px"
-            />
-          </div>
+          <h1 style={{marginTop: '-20px'}}>Hue</h1>
+          <HuePicker
+            color={this.state.hex}
+            onChangeComplete={this.handleChangeComplete}
+            height="40px"
+            width="80%"
+          />
 
           <h1>Saturation</h1>
           <SliderTooltip
-            style={{width: '50%', marginTop: '10px'}}
+            style={{width: '80%', marginTop: '-20px'}}
             max={100}
             className="slider animationSpeedSlider"
             defaultValue={this.state.saturation * 100}
             onAfterChange={this.handleSaturationChange}
           />
+          <h1>Brightness</h1>
+          <SliderTooltip
+            style={{width: '80%', marginTop: '-20px', marginBottom: '30px'}}
+            max={100}
+            className="slider animationSpeedSlider"
+            defaultValue={this.state.brightness * 100}
+            onAfterChange={this.handleBrightnessChange}
+          />
         </>
       );
     }
     return (
-      <div className="App" style={{overflow: 'hidden'}}>
+      <div
+        className="App"
+        style={{
+          width: '100%',
+          position: 'fixed',
+          overflowX: 'hidden',
+          overflowY: 'hidden'
+        }}>
         {menu}
         <header className="App-header">
           <svg
@@ -170,15 +241,6 @@ class App extends Component {
           </svg>
 
           {bottomPart}
-
-          <h1>Brightness</h1>
-          <SliderTooltip
-            style={{width: '50%', marginTop: '10px', marginBottom: '30px'}}
-            max={100}
-            className="slider animationSpeedSlider"
-            defaultValue={this.state.brightness * 100}
-            onAfterChange={this.handleBrightnessChange}
-          />
         </header>
       </div>
     );

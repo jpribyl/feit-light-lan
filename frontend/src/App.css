@@ -31,3 +31,21 @@
     transform: rotate(360deg);
   }
 }
+
+/*resize the hue bar*/
+.hue-horizontal > div:nth-child(2) > div:nth-child(1) {
+    height: 40px !important;
+    width: 40px !important;
+}
+
+.hue-horizontal > div:nth-child(2) > div:nth-child(1):hover{
+    cursor: grab;
+}
+
+* {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: -moz-none;
+    -o-user-select: none;
+    user-select: none;
+}
