@@ -8,12 +8,12 @@ module.exports = {
   lights: [
     {
       id: '73280536cc50e3512e46',
-      key: '1c321f0bbfedde17',
+      key: '6a4e7ae71218abca',
       ip: '192.168.1.191'
     },
     {
       id: '38372430b4e62d59a66d',
-      key: '0865061ce640592d',
+      key: '34f9606ab7d8f2e7',
       ip: '192.168.1.193'
     }
   ],

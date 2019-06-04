@@ -121,7 +121,7 @@ class LightController {
         return {hello: 'world'};
     } catch (e) {
         console.log(e);
-        return {hello: 'world'};
+        return {hello: e};
     }
   }
 }
