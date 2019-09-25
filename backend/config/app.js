@@ -13,7 +13,7 @@ module.exports = {
     },
     {
       id: '38372430b4e62d59a66d',
-      key: '34f9606ab7d8f2e7',
+      key: '8937bf0eeaa29032',
       ip: '192.168.1.193'
     }
   ],

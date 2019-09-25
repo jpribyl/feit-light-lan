@@ -8,7 +8,7 @@ import {AwesomeButton} from 'react-awesome-button';
 import {slide as Menu} from 'react-burger-menu';
 import Presets from './presets';
 
-const apiBase = 'http://192.168.1.156:3333';
+const apiBase = 'http://192.168.1.190:3333';
 const createSliderWithTooltip = Slider.createSliderWithTooltip;
 const SliderTooltip = createSliderWithTooltip(Slider);
 
